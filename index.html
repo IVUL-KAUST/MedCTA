@@ -1,0 +1,1275 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>MedCTA: A Benchmark for Clinical Tool Agents</title>
+    <link rel="icon" type="image/x-icon" href="./static/img/icons/brain.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="MedCTA is a clinician-validated benchmark for evaluating medical tool agents on multimodal clinical tasks with executable tool trajectories.">
+
+    <meta property="og:url" content="https://github.com/IVUL-KAUST/MedCTA" />
+    <meta property="og:image" content="./static/img/preview.png" />
+    <meta property="og:title" content="MedCTA: A Benchmark for Clinical Tool Agents" />
+    <meta property="og:description"
+        content="A trajectory-aware benchmark for auditing clinical tool use, evidence acquisition, and outcome quality in medical AI agents." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="./static/img/preview.png" />
+    <meta name="twitter:title" content="MedCTA: A Benchmark for Clinical Tool Agents" />
+    <meta name="twitter:description"
+        content="Clinician-validated, executable, multimodal clinical tool-agent benchmark." />
+
+    <script src="./static/js/distill_template.v2.js"></script>
+    <script defer src="./static/js/hider.js"></script>
+    <script defer src="./static/js/medium-zoom.min.js"></script>
+    <script defer src="./static/js/zoom.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+    <style>
+        :root {
+            --medcta-ink: #12333d;
+            --medcta-muted: #536977;
+            --medcta-blue: #065f73;
+            --medcta-teal: #1f9e91;
+            --medcta-green: #81c784;
+            --medcta-gold: #f4c74f;
+            --medcta-card: #ffffff;
+            --medcta-line: #d9e7ec;
+            --medcta-soft: #eef8f6;
+        }
+
+        body {
+            color: var(--medcta-ink);
+            background: #fbfdfd;
+        }
+
+        .header-wrapper {
+            background:
+                radial-gradient(circle at top left,
+                    rgba(60, 90, 255, 0.18),
+                    transparent 30%),
+                linear-gradient(135deg,
+                    #000000 0%,
+                    #050816 35%,
+                    #0a1931 70%,
+                    #102a43 100%);
+        }
+
+        .header-container {
+            gap: 36px;
+            max-width: 1500px;
+        }
+
+        .header-content h1 {
+            color: #fff3bd;
+            letter-spacing: -0.04em;
+        }
+
+        .header-content h2 {
+            color: #ffffff;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        .header-content strong {
+            color: #fff0a3;
+        }
+
+        .header-content {
+            color: #eefcff;
+        }
+
+        .header-image img {
+            border-radius: 22px;
+            box-shadow: 0 24px 70px rgba(0, 32, 45, 0.33);
+            background: #fff;
+            padding: 0;
+        }
+
+        .button-container a.button {
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            background: rgba(255, 255, 255, 0.92);
+            color: #04485a;
+            box-shadow: 0 8px 22px rgba(0, 45, 60, 0.16);
+        }
+
+        .button-container a.button:hover {
+            background: #fff0b8;
+            color: #063945;
+        }
+
+        .tagline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 14px 0;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.17);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            color: #f7fffb;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .byline {
+            border-bottom: 1px solid var(--medcta-line);
+            background: #ffffff;
+        }
+
+        .author-note {
+            color: var(--medcta-muted);
+        }
+
+        .text {
+            color: var(--medcta-ink);
+        }
+
+        .abstract {
+            border-left: 6px solid var(--medcta-teal);
+            background: linear-gradient(90deg, #effaf8 0%, #ffffff 100%);
+            padding: 24px 28px;
+            border-radius: 14px;
+            box-shadow: 0 8px 28px rgba(2, 75, 92, 0.08);
+        }
+
+        .icon-link {
+            border-color: #b6dfe4;
+            background: #f2fbf9;
+            color: #0a5364;
+            box-shadow: 0 10px 24px rgba(1, 79, 96, 0.08);
+        }
+
+        .icon-link:hover {
+            background: #e1f5ef;
+        }
+
+        .section-kicker {
+            color: var(--medcta-blue);
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+
+            justify-content: center;
+            align-items: stretch;
+
+            gap: 1.5rem;
+
+            width: 100%;
+            max-width: 1500px;
+
+            margin: 2.5rem auto;
+        }
+
+        .quick-links-grid {
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+
+            justify-content: center !important;
+            align-items: center !important;
+
+            gap: 1.5rem;
+
+            width: max-content !important;
+            max-width: none !important;
+
+            margin: 3rem 0 !important;
+
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .stat-card {
+            width: 310px;
+            /* increase this more if needed */
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+
+            padding: 1.6rem 1.8rem;
+
+            border-radius: 24px;
+
+            background: rgba(255, 255, 255, 0.75);
+
+            border: 2px solid rgba(120, 160, 220, 0.16);
+
+            backdrop-filter: blur(12px);
+        }
+
+        .stat-value {
+            font-size: 3.3rem;
+            font-weight: 700;
+            line-height: 1;
+
+            color: #0c5adb;
+
+            margin-bottom: 0.9rem;
+        }
+
+        .stat-label {
+            font-size: 1.02rem;
+            line-height: 1.45;
+
+            color: #3f4f63;
+
+            max-width: 220px;
+        }
+
+        .quick-links-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: nowrap;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 18px;
+            margin: 22px 0 30px 0;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border: 1px solid var(--medcta-line);
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: 0 12px 30px rgba(4, 61, 74, 0.07);
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+            color: var(--medcta-blue);
+            font-size: 1.18rem;
+        }
+
+        .info-card p,
+        .info-card li {
+            color: var(--medcta-muted);
+            line-height: 1.55;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .chip {
+            border: 1px solid #cce5e9;
+            background: #f6fcfb;
+            border-radius: 999px;
+            padding: 7px 12px;
+            color: #065568;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .mini-table,
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(4, 61, 74, 0.08);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+        }
+
+        .mini-table th,
+        .mini-table td,
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 12px 13px;
+            border-bottom: 1px solid #e6eef1;
+            text-align: center;
+        }
+
+        .mini-table th,
+        .leaderboard-table th {
+            background: #254e5c;
+            color: #ffffff;
+            font-weight: 750;
+        }
+
+        .mini-table td:first-child,
+        .leaderboard-table td:first-child {
+            text-align: left;
+            font-weight: 700;
+            color: #183943;
+        }
+
+        .leaderboard-table tbody tr:hover,
+        .mini-table tbody tr:hover {
+            background: #f7fbfb;
+        }
+
+        .best-score {
+            font-weight: 850;
+            color: #03566a;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+
+        .top-performer {
+            background: #f0fbf4 !important;
+        }
+
+        .open-highlight {
+            background: #f7f1ff !important;
+        }
+
+        .model-badge {
+            display: inline-block;
+            padding: 2px 7px;
+            margin-left: 7px;
+            border-radius: 999px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 800;
+        }
+
+        .proprietary-badge {
+            background: #edf2f7;
+            color: #475569;
+            border: 1px solid #d4dde8;
+        }
+
+        .open-badge {
+            background: #e6fff8;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .table-scroll {
+            width: fit-content;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin: 20px 0 32px 0;
+        }
+
+        .leaderboard-table {
+            min-width: 1050px;
+        }
+
+        #leaderboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-note {
+            background: #fff8df;
+            border: 1px solid #f0d988;
+            color: #6c5712;
+            border-radius: 14px;
+            padding: 14px 16px;
+            line-height: 1.45;
+        }
+
+        .bar-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .bar-item {
+            display: grid;
+            grid-template-columns: 150px 1fr 60px;
+            gap: 12px;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .bar-track {
+            background: #e9f2f4;
+            border-radius: 999px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--medcta-teal), var(--medcta-green));
+        }
+
+        .callout-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin: 18px 0 24px 0;
+        }
+
+        .callout {
+            background: #f4fbfb;
+            border: 1px solid #d5eaee;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .callout strong {
+            color: #064c5f;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        figure img {
+            border-radius: 14px;
+            border: 1px solid #dfecef;
+            box-shadow: 0 12px 34px rgba(4, 61, 74, 0.09);
+            background: #ffffff;
+        }
+
+        figcaption {
+            color: #526b76;
+        }
+
+        pre,
+        code {
+            font-size: 14px;
+            border-radius: 12px;
+        }
+
+        footer {
+            margin: 50px auto 70px auto;
+            max-width: 900px;
+            color: var(--medcta-muted);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+
+            .stats-grid,
+            .card-grid,
+            .callout-grid {
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+
+            .bar-item {
+                grid-template-columns: 100px 1fr 46px;
+            }
+
+            .header-content h1 {
+                font-size: 2.8em !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-wrapper">
+        <div class="header-container" id="header-container">
+            <div class="header-content">
+                <!-- <div class="tagline">Clinical agent benchmark</div > -->
+                <h1 style="margin-top: 0px">MedCTA</h1>
+                <div class="responsive-header">
+                    <h2>A Benchmark for Clinical Tool Agents</h2>
+                </div>
+                <div class="icon-container">
+                    <div class="icon-item">
+                        <img src="./static/img/icons/bench.svg" alt="Benchmark icon">
+                        <div><strong>Clinician-validated tasks</strong>: 107 multimodal clinical tasks with
+                            step-implicit queries.</div>
+                    </div>
+                    <div class="icon-item">
+                        <img src="./static/img/icons/evaluation.svg" alt="Evaluation icon">
+                        <div><strong>Executable tool chains</strong>: reference trajectories over OCR, ImageDescription,
+                            RegionAttributeDescription, GoogleSearch, and Calculator.</div>
+                    </div>
+                    <div class="icon-item">
+                        <img src="./static/img/icons/speech.svg" alt="Reasoning icon">
+                        <div><strong>Process-aware evaluation</strong>: audits tool routing, argument validity,
+                            trajectory fidelity, evidence use, and outcomes.</div>
+                    </div>
+                    <div class="icon-item">
+                        <img src="./static/img/icons/vision.svg" alt="Vision icon">
+                        <div><strong>Controller diagnostics</strong>: exposes brittle rollouts, premature stopping, and
+                            evidence-grounding failures in medical agents.</div>
+                    </div>
+                </div>
+                <div class="button-container">
+
+                    
+
+                    <!-- arXiv -->
+                    <a href="https://arxiv.org/" class="button" target="_blank">
+                        <span class="icon is-small">
+                            <img src="./static/img/icons/arxiv.svg" alt="arXiv" style="height: 1em;">
+                        </span>
+                        Paper
+                    </a>
+
+                    <!-- GitHub -->
+                    <a href="https://github.com/IVUL-KAUST/MedCTA" class="button" target="_blank">
+                        <span class="icon is-small">
+                            <img src="./static/img/icons/github.svg" alt="GitHub" style="height: 1em;">
+                        </span>
+                        Code
+                    </a>
+
+                    <!-- HuggingFace -->
+                    <a href="https://huggingface.co/" class="button" target="_blank">
+                        <span class="icon is-small">
+                            <img src="./static/img/icons/huggingface.svg" alt="HuggingFace" style="height: 1em;">
+                        </span>
+                        Dataset
+                    </a>
+
+                    <!-- Leaderboard -->
+                    <a href="#leaderboard" class="button">
+                        <span class="icon is-small">
+                            <img src="./static/img/leaderboard-star-svgrepo-com.svg" alt="Leaderboard"
+                                style="height: 1em;">
+                        </span>
+                        Leaderboard
+                    </a>
+
+                    <!-- BibTex -->
+                    <a href="#bibtex" class="button">
+                        <span class="icon is-small">
+                            <i class="fas fa-quote-right"></i>
+                        </span>
+                        BibTeX
+                    </a>
+
+                </div>
+            </div>
+            <div class="header-image">
+                <img draggable="false" src="static/img/preview.png" alt="MedCTA curation pipeline preview"
+                    class="teaser-image">
+            </div>
+        </div>
+    </div>
+
+    <d-article>
+        <div class="byline byline-with-logos">
+            <img class="aff-logo kaust-logo" src="static/img/kaust-logo.png" alt="KAUST logo">
+
+            <div class="byline-text">
+                <p class="authors">
+                    <span class="author-link">Tajamul Ashraf</span><sup>1</sup>,
+                    <span class="author-link">Hyewon Jeong</span><sup>2</sup>,
+                    <span class="author-link">Fida Mohammad Thoker</span><sup>1,*</sup>,
+                    <span class="author-link">Bernard Ghanem</span><sup>1</sup>
+                </p>
+
+                <p class="affiliations">
+                    <sup>1</sup> King Abdullah University of Science and Technology (KAUST),
+                    <sup>2</sup> Massachusetts Institute of Technology (MIT)
+                </p>
+
+                <p class="correspondence">
+                    <sup>*</sup> Correspondence:
+                    <a href="mailto:fida.thoker@kaust.edu.sa">fida.thoker@kaust.edu.sa</a>
+                </p>
+            </div>
+
+            <img class="aff-logo mit-logo" src="static/img/mit-logo.png" alt="MIT logo">
+        </div>
+
+        <p class="text abstract" align="justify">
+            <strong>Abstract.</strong> To make clinically grounded decisions, medical AI agents are expected to go
+            beyond simple recognition and be capable of tool retrieval, evidence acquisition, and
+            integration. Existing benchmarks largely evaluate isolated perception or single-turn
+            question answering, and therefore provide limited visibility into failures of planning,
+            tool recruitment, and rollout reliability. We introduce MedCTA, a benchmark for
+            evaluating medical tool agents on clinician-validated, step-implicit tasks grounded
+            in realistic multimodal clinical inputs, including radiology images, pathology
+            slides, and reports. MedCTA comprises 107 real-world clinical tasks with clinician-
+            verified executable trajectories over 5 deployed tools, and supports process-aware
+            evaluation of tool selection, argument validity, execution stability, trajectory fidelity,
+            and outcome quality. We benchmark 18 open- and closed-source multimodal
+            models and find that even frontier systems remain brittle in multi-step clinical tool
+            use: autonomous rollouts are dominated by protocol failures, premature stopping,
+            and incorrect tool recruitment, while gold-standard tool routing yields large but
+            still incomplete gains. These results show that strong backbone perception does
+            not translate into reliable agentic behavior in clinical settings. MedCTA provides a
+            rigorous testbed for auditing, diagnosing, and advancing trustworthy medical AI
+            agents.
+        </p>
+
+        <div class="stats-grid">
+            <div class="stat-card"><span class="stat-value">107</span><span class="stat-label">clinician-validated
+                    clinical tasks</span></div>
+            <div class="stat-card"><span class="stat-value">5</span><span class="stat-label">deployed executable
+                    tools</span></div>
+            <div class="stat-card"><span class="stat-value">18</span><span class="stat-label">open and closed models
+                    benchmarked</span></div>
+            <div class="stat-card"><span class="stat-value">1,926</span><span class="stat-label">autonomous rollouts
+                    analyzed</span></div>
+        </div>
+
+        <div class="icon-row">
+            <a href="#benchmark" class="icon-link"><img src="./static/img/icons/bench.svg" alt="Benchmark"
+                    class="icon">Benchmark<br>Design</a>
+            <a href="#construction" class="icon-link"><img src="./static/img/icons/world.svg" alt="Construction"
+                    class="icon">Curation<br>Pipeline</a>
+            <a href="#evaluation" class="icon-link"><img src="./static/img/icons/evaluation.svg" alt="Evaluation"
+                    class="icon">Evaluation<br>Protocol</a>
+            <a href="#leaderboard" class="icon-link"><img src="./static/img/leaderboard-star-svgrepo-com.svg"
+                    alt="Leaderboard" class="icon">Main<br>Results</a>
+            <a href="#failure" class="icon-link"><img src="./static/img/icons/vision.svg" alt="Diagnostics"
+                    class="icon">Failure<br>Diagnostics</a>
+        </div>
+
+        <hr>
+
+        <div id="benchmark" class="sub-section">
+            <h1 class="text">Why Clinical Tool Agents?</h1>
+            <p class="text" align="justify">
+                Clinical decision making is iterative and multimodal: agents must inspect images, extract text, measure
+                findings, retrieve knowledge, combine evidence, and stop only after the conclusion is supported. MedCTA
+                turns that requirement into an executable benchmark where the tool sequence is hidden from the model and
+                must be planned autonomously.
+            </p>
+            <div class="card-grid">
+                <div class="info-card">
+                    <h3>Task tuple</h3>
+                    <p>Each task is represented as <strong>(X, Q, U, &pi;, A)</strong>: clinical context, step-implicit
+                        query, hidden sufficient tool subset, reference interaction trace, and final clinical outcome.
+                    </p>
+                    <div class="chip-row">
+                        <span class="chip">radiology</span><span class="chip">histopathology</span><span
+                            class="chip">reports</span><span class="chip">scanned clinical content</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3>What MedCTA measures</h3>
+                    <p>The benchmark separates controller competence from clinical reasoning by scoring instruction
+                        following, tool selection, argument validity, evidence summaries, clinical faithfulness, context
+                        integration, semantic completeness, and final goal accuracy.</p>
+                    <div class="chip-row">
+                        <span class="chip">tool routing</span><span class="chip">evidence grounding</span><span
+                            class="chip">rollout stability</span><span class="chip">outcome quality</span>
+                    </div>
+                </div>
+            </div>
+            <d-figure id="fig-benchmark-comparison">
+                <figure>
+                    <img data-zoomable draggable="false" src="static/img/medcta/benchmark_comparison.png"
+                        alt="Benchmark comparison table"
+                        style="width: 92%; height: auto; display: block; margin: 0 auto;">
+                    <figcaption><strong>Table 1.</strong> MedCTA is positioned against representative
+                        medical VQA, medical reasoning, and medical agent benchmarks, emphasizing executable tools,
+                        real-world clinical queries, multimodal inputs, and deep reasoning.</figcaption>
+                </figure>
+            </d-figure>
+        </div>
+
+        <hr>
+
+        <div id="construction" class="sub-section">
+            <h1 class="text">Clinically Grounded, Tool-Implicit Tasks</h1>
+            <p class="text" align="justify">
+                MedCTA starts from perception-level medical QA seeds and lifts them into realistic clinical objectives.
+                LMM drafts provide scalable starting points, human annotators remove tool leakage and procedural
+                phrasing, and clinicians verify medical correctness, workflow plausibility, and final outcomes.
+            </p>
+            <d-figure id="fig-pipeline">
+                <figure>
+                    <img data-zoomable draggable="false" src="static/img/medcta/curation_pipeline.png"
+                        alt="MedCTA curation pipeline"
+                        style="width: 94%; height: auto; display: block; margin: 0 auto;">
+                    <figcaption><strong>Figure 1.</strong> MedCTA construction combines clinical query construction with
+                        medical tool-chain construction. Technical and clinical reviewers ensure executability,
+                        minimality, and medical soundness.</figcaption>
+                </figure>
+            </d-figure>
+            <div class="card-grid">
+                <div class="info-card">
+                    <h3>Clinical query construction</h3>
+                    <p>Final queries are goal-oriented and clinically phrased. They require multi-step tool use but do
+                        not reveal which tools should be called or in what order.</p>
+                </div>
+                <div class="info-card">
+                    <h3>Reference trajectory construction</h3>
+                    <p>Candidate trajectories are drafted by an LMM, technically refined for schema compliance and
+                        minimality, then clinically verified for evidence grounding and reasoning soundness.</p>
+                </div>
+            </div>
+            <d-figure id="fig-query-table">
+                <figure>
+                    <img data-zoomable draggable="false" src="static/img/medcta/query_transformation.png"
+                        alt="Query transformation examples"
+                        style="width: 94%; height: auto; display: block; margin: 0 auto;">
+                    <figcaption><strong>Table 2.</strong> Query transformation removes perception-only prompts and
+                        tool-leaking instructions, leaving a clinically grounded goal that still requires planning.
+                    </figcaption>
+                </figure>
+            </d-figure>
+            <d-figure id="fig-trajectory">
+                <figure>
+                    <img data-zoomable draggable="false" src="static/img/medcta/trajectory_annotation.png"
+                        alt="Comparison of GPT-generated and human-annotated trajectories"
+                        style="width: 94%; height: auto; display: block; margin: 0 auto;">
+                    <figcaption><strong>Figure 2.</strong> Human and clinician review shortens brittle LMM-generated
+                        trajectories while preserving the medical evidence needed to answer the query.</figcaption>
+                </figure>
+            </d-figure>
+        </div>
+
+        <hr>
+
+        <div id="dataset" class="sub-section">
+            <h1 class="text">Broad Multimodal Clinical Coverage</h1>
+            <div class="stats-grid">
+                <div class="stat-card"><span class="stat-value">321</span><span class="stat-label">human annotation
+                        hours</span></div>
+                <div class="stat-card"><span class="stat-value">34</span><span class="stat-label">anatomical regions and
+                        body systems</span></div>
+                <div class="stat-card"><span class="stat-value">2-4</span><span class="stat-label">tool steps per
+                        task</span></div>
+                <div class="stat-card"><span class="stat-value">3.1</span><span class="stat-label">average
+                        tool-execution steps</span></div>
+            </div>
+            <div class="card-grid">
+                <div class="info-card">
+                    <h3>Executable tool library</h3>
+                    <table class="mini-table">
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OCR</td>
+                                <td>Extract visible text from images and documents.</td>
+                            </tr>
+                            <tr>
+                                <td>ImageDescription</td>
+                                <td>Generate holistic visual summaries.</td>
+                            </tr>
+                            <tr>
+                                <td>RegionAttributeDescription</td>
+                                <td>Describe attributes in localized image regions.</td>
+                            </tr>
+                            <tr>
+                                <td>GoogleSearch</td>
+                                <td>Retrieve external knowledge for a query.</td>
+                            </tr>
+                            <tr>
+                                <td>Calculator</td>
+                                <td>Evaluate symbolic and numerical expressions.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-card">
+                    <h3>Modality coverage</h3>
+                    <p>The benchmark mixes radiology, pathology, report-based inputs, microscopy, fundus photography,
+                        and other clinical image types.</p>
+                    <div class="bar-list">
+                        <div class="bar-item"><span>CT</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 20.0%;"></div>
+                            </div><span>20.0%</span>
+                        </div>
+                        <div class="bar-item"><span>Reports</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 20.0%;"></div>
+                            </div><span>20.0%</span>
+                        </div>
+                        <div class="bar-item"><span>Histopathology</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 18.3%;"></div>
+                            </div><span>18.3%</span>
+                        </div>
+                        <div class="bar-item"><span>X-ray</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 9.6%;"></div>
+                            </div><span>9.6%</span>
+                        </div>
+                        <div class="bar-item"><span>MRI</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 8.7%;"></div>
+                            </div><span>8.7%</span>
+                        </div>
+                        <div class="bar-item"><span>Fundus</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 7.0%;"></div>
+                            </div><span>7.0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div id="evaluation" class="sub-section">
+            <h1 class="text">Trajectory-Aware Evaluation</h1>
+            <p class="text" align="justify">
+                MedCTA reports three complementary metric groups: step-by-step tool-use fidelity, clinical reasoning
+                quality, and final outcome accuracy. This makes it possible to identify whether a model failed because
+                it chose the wrong tool, produced invalid arguments, drifted away from evidence, or reached the wrong
+                clinical conclusion.
+            </p>
+            <div class="table-scroll">
+                <table class="mini-table">
+                    <thead>
+                        <tr>
+                            <th>Metric group</th>
+                            <th>Metrics</th>
+                            <th>What it diagnoses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Step-by-step</td>
+                            <td>InstAcc, ToolAcc, ArgAcc, SummAcc</td>
+                            <td>Protocol adherence, next-tool selection, argument validity, and intermediate
+                                summarization.</td>
+                        </tr>
+                        <tr>
+                            <td>Clinical reasoning</td>
+                            <td>Facc, Cs, Scomp</td>
+                            <td>Clinical faithfulness, multimodal context integration, and semantic completeness.</td>
+                        </tr>
+                        <tr>
+                            <td>Outcome</td>
+                            <td>Gacc</td>
+                            <td>Final answer accuracy for diagnostic and interpretive tasks.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <d-figure id="fig-metrics">
+                <figure>
+                    <img data-zoomable draggable="false" src="static/img/medcta/metrics_correlation.png"
+                        alt="Evaluation metrics and correlation with final accuracy"
+                        style="width: 94%; height: auto; display: block; margin: 0 auto;">
+                    <figcaption><strong>Table 3 and Figure 3.</strong> Clinical reasoning metrics, especially semantic
+                        completeness and clinical faithfulness, correlate strongly with final accuracy.</figcaption>
+                </figure>
+            </d-figure>
+        </div>
+
+        <hr>
+
+        <div id="leaderboard" class="sub-section">
+            <h1 class="text">MedCTA Leaderboard</h1>
+            <p class="text" align="justify">
+                In the autonomous tool-using setting, the best reported outcome accuracy is <strong>31.54%</strong>. The
+                strongest open model reaches <strong>27.80%</strong>, while gold-standard tool routing produces large
+                gains, indicating a major controller reliability gap.
+            </p>
+
+            <div class="table-scroll">
+                <table class="leaderboard-table" id="results-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Model</th>
+                            <th rowspan="2">Family</th>
+                            <th colspan="4">Step-by-Step</th>
+                            <th colspan="3">Clinical Reasoning</th>
+                            <th rowspan="2">Gacc</th>
+                        </tr>
+                        <tr>
+                            <th>Inst.</th>
+                            <th>Tool.</th>
+                            <th>Arg.</th>
+                            <th>Summ.</th>
+                            <th>Facc</th>
+                            <th>Cs</th>
+                            <th>Scomp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="top-performer">
+                            <td>GPT-5.4* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>OpenAI</td>
+                            <td>35.27</td>
+                            <td class="best-score">23.46</td>
+                            <td>12.61</td>
+                            <td>35.51</td>
+                            <td>17.52</td>
+                            <td>14.21</td>
+                            <td>18.60</td>
+                            <td class="best-score">31.54</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-5.4-mini* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>OpenAI</td>
+                            <td>5.36</td>
+                            <td>6.74</td>
+                            <td>3.23</td>
+                            <td>0.93</td>
+                            <td>16.47</td>
+                            <td>10.56</td>
+                            <td>17.29</td>
+                            <td>28.31</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-5.4-nano* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>OpenAI</td>
+                            <td>33.93</td>
+                            <td>18.18</td>
+                            <td>12.02</td>
+                            <td>34.24</td>
+                            <td class="best-score">18.43</td>
+                            <td>11.96</td>
+                            <td>14.77</td>
+                            <td>20.30</td>
+                        </tr>
+                        <tr>
+                            <td>GPT-oss-20B <span class="model-badge open-badge">open</span></td>
+                            <td>OpenAI</td>
+                            <td>1.79</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>0.00</td>
+                            <td>1.31</td>
+                            <td>0.56</td>
+                            <td>1.68</td>
+                            <td>3.18</td>
+                        </tr>
+                        <tr>
+                            <td>Claude-opus-4-6* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>Anthropic</td>
+                            <td>24.78</td>
+                            <td>8.80</td>
+                            <td>0.59</td>
+                            <td>39.25</td>
+                            <td>14.11</td>
+                            <td>14.86</td>
+                            <td class="best-score">23.83</td>
+                            <td>31.32</td>
+                        </tr>
+                        <tr>
+                            <td>Claude-sonnet-4-6* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>Anthropic</td>
+                            <td>23.66</td>
+                            <td>4.99</td>
+                            <td>0.00</td>
+                            <td>33.64</td>
+                            <td>12.77</td>
+                            <td>12.90</td>
+                            <td>20.19</td>
+                            <td>25.33</td>
+                        </tr>
+                        <tr>
+                            <td>Claude-haiku-4-5* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>Anthropic</td>
+                            <td>27.46</td>
+                            <td>13.78</td>
+                            <td>4.69</td>
+                            <td class="best-score">43.93</td>
+                            <td>9.35</td>
+                            <td>3.36</td>
+                            <td>14.11</td>
+                            <td>23.08</td>
+                        </tr>
+                        <tr>
+                            <td>Gemini-3-flash* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>Google</td>
+                            <td>3.35</td>
+                            <td>17.30</td>
+                            <td>0.00</td>
+                            <td>5.61</td>
+                            <td>11.31</td>
+                            <td>8.60</td>
+                            <td>15.98</td>
+                            <td>25.87</td>
+                        </tr>
+                        <tr>
+                            <td>Gemini-3-flash-lite* <span class="model-badge proprietary-badge">closed</span></td>
+                            <td>Google</td>
+                            <td>2.90</td>
+                            <td>8.21</td>
+                            <td>0.00</td>
+                            <td>1.87</td>
+                            <td>10.75</td>
+                            <td>6.82</td>
+                            <td>14.58</td>
+                            <td>23.64</td>
+                        </tr>
+                        <tr class="open-highlight">
+                            <td>Qwen3.5-9B <span class="model-badge open-badge">open</span></td>
+                            <td>Qwen</td>
+                            <td class="best-score">44.20</td>
+                            <td>14.37</td>
+                            <td class="best-score">13.78</td>
+                            <td>29.91</td>
+                            <td>10.37</td>
+                            <td class="best-score">17.10</td>
+                            <td>13.36</td>
+                            <td>21.64</td>
+                        </tr>
+                        <tr class="open-highlight">
+                            <td>Qwen3-8B <span class="model-badge open-badge">open</span></td>
+                            <td>Qwen</td>
+                            <td>33.93</td>
+                            <td>10.56</td>
+                            <td>7.04</td>
+                            <td>32.71</td>
+                            <td>8.50</td>
+                            <td>10.09</td>
+                            <td>11.50</td>
+                            <td><strong>27.80</strong></td>
+                        </tr>
+                        <tr>
+                            <td>DeepSeek-R1-Distill-7B <span class="model-badge open-badge">open</span></td>
+                            <td>DeepSeek</td>
+                            <td>10.49</td>
+                            <td>3.52</td>
+                            <td>0.00</td>
+                            <td>7.48</td>
+                            <td>2.62</td>
+                            <td>0.84</td>
+                            <td>3.36</td>
+                            <td>10.61</td>
+                        </tr>
+                        <tr>
+                            <td>Deepseek-llm-7b-chat <span class="model-badge open-badge">open</span></td>
+                            <td>DeepSeek</td>
+                            <td>11.61</td>
+                            <td>6.45</td>
+                            <td>0.00</td>
+                            <td>4.67</td>
+                            <td>4.30</td>
+                            <td>2.62</td>
+                            <td>4.02</td>
+                            <td>11.00</td>
+                        </tr>
+                        <tr>
+                            <td>DeepSeek-V2-Lite-Chat <span class="model-badge open-badge">open</span></td>
+                            <td>DeepSeek</td>
+                            <td>11.83</td>
+                            <td>11.14</td>
+                            <td>0.29</td>
+                            <td>0.00</td>
+                            <td>3.83</td>
+                            <td>3.55</td>
+                            <td>6.54</td>
+                            <td>6.96</td>
+                        </tr>
+                        <tr>
+                            <td>Llama-3.1-8B-Instruct <span class="model-badge open-badge">open</span></td>
+                            <td>Meta</td>
+                            <td>23.66</td>
+                            <td>7.92</td>
+                            <td>0.00</td>
+                            <td>6.54</td>
+                            <td>7.94</td>
+                            <td>5.42</td>
+                            <td>11.21</td>
+                            <td>18.94</td>
+                        </tr>
+                        <tr>
+                            <td>Llama-3.2-3B-Instruct <span class="model-badge open-badge">open</span></td>
+                            <td>Meta</td>
+                            <td>18.53</td>
+                            <td>1.76</td>
+                            <td>0.00</td>
+                            <td>4.67</td>
+                            <td>3.08</td>
+                            <td>1.68</td>
+                            <td>5.14</td>
+                            <td>11.29</td>
+                        </tr>
+                        <tr>
+                            <td>Mistral-7B <span class="model-badge open-badge">open</span></td>
+                            <td>Mistral</td>
+                            <td>18.75</td>
+                            <td>14.66</td>
+                            <td>0.00</td>
+                            <td>9.35</td>
+                            <td>2.52</td>
+                            <td>1.87</td>
+                            <td>3.46</td>
+                            <td>9.40</td>
+                        </tr>
+                        <tr>
+                            <td>Phi-4 <span class="model-badge open-badge">open</span></td>
+                            <td>Microsoft</td>
+                            <td>20.09</td>
+                            <td>6.45</td>
+                            <td>0.00</td>
+                            <td>14.02</td>
+                            <td>6.36</td>
+                            <td>3.36</td>
+                            <td>6.17</td>
+                            <td>10.65</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div id="failure" class="sub-section">
+            <h1 class="text">Controller Failures Dominate Rollouts</h1>
+            <div class="callout-grid">
+                <div class="callout"><strong>Gold-routing gap</strong> Claude-opus-4-6 improves from 31.32 to 66.40 Gacc
+                    when tool routing is provided.</div>
+                <div class="callout"><strong>Under-calling</strong> 99.2% under-call rate indicates premature stopping
+                    before sufficient evidence is collected.</div>
+                <div class="callout"><strong>Protocol instability</strong> 64.2% API/protocol error rate and 58.3%
+                    first-failure protocol breakdown.</div>
+            </div>
+            <div class="card-grid">
+                <div class="info-card">
+                    <h3>Autonomous vs. gold routing</h3>
+                    <table class="mini-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Auto</th>
+                                <th>Gold</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GPT-5.4</td>
+                                <td>31.54</td>
+                                <td>49.50</td>
+                                <td><strong>+17.96</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Claude-opus-4-6</td>
+                                <td>31.32</td>
+                                <td>66.40</td>
+                                <td><strong>+35.08</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Qwen3.5-9B</td>
+                                <td>21.64</td>
+                                <td>49.50</td>
+                                <td><strong>+27.86</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-card">
+                    <h3>Rollout diagnostics</h3>
+                    <table class="mini-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                                <th>Insight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>API error rate</td>
+                                <td><strong>64.2</strong></td>
+                                <td>Protocol instability</td>
+                            </tr>
+                            <tr>
+                                <td>Under-call rate</td>
+                                <td><strong>99.2</strong></td>
+                                <td>Premature stopping</td>
+                            </tr>
+                            <tr>
+                                <td>Protocol failure</td>
+                                <td><strong>58.3</strong></td>
+                                <td>Rollout breakdown</td>
+                            </tr>
+                            <tr>
+                                <td>Tool-selection failure</td>
+                                <td>41.6</td>
+                                <td>Incorrect actions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <d-figure id="fig-failure">
+                <figure>
+                    <img data-zoomable draggable="false" src="static/img/medcta/failure_analysis.png"
+                        alt="Qualitative failure analysis"
+                        style="width: 94%; height: auto; display: block; margin: 0 auto;">
+                    <figcaption><strong>Figure 4.</strong> A sentinel-node metastasis example shows how models can skip
+                        tool reasoning or drift away from extracted OCR evidence, even when perception is recoverable.
+                    </figcaption>
+                </figure>
+            </d-figure>
+        </div>
+
+        <hr>
+
+        <div id="takeaway" class="sub-section">
+            <h1 class="text">Reliable Clinical Agency Requires More Than Perception</h1>
+            <p class="text" align="justify">
+                MedCTA shows a separation between backbone perception and agentic competence. Strong VLMs can identify
+                medical content in a single turn, but autonomous clinical tool agents must also select tools, maintain
+                valid interaction protocols, integrate intermediate evidence, and stop only when the answer is
+                justified.
+            </p>
+            <div class="card-grid">
+                <div class="info-card">
+                    <h3>Backbone-only comparison</h3>
+                    <p>Several backbone VLMs score higher without tool interaction than many autonomous tool-agent
+                        rollouts, which indicates that agent control is itself a major research problem.</p>
+                </div>
+                <div class="info-card">
+                    <h3>What to improve next</h3>
+                    <p>Future clinical agents need stronger tool recruitment, stable protocol execution, stop/continue
+                        calibration, and evidence-obedient reasoning over localized multimodal observations.</p>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div id="bibtex" class="sub-section">
+            <h2 class="text">BibTeX</h2>
+            <pre><code>@misc{ashraf_medcta,
+  title        = {MedCTA: A Benchmark for Clinical Tool Agents},
+  author       = {Ashraf, Tajamul and Jeong, Hyewon and Thoker, Fida Mohammad and Ghanem, Bernard},
+  note         = {Preprint},
+  howpublished = {\url{https://github.com/IVUL-KAUST/MedCTA}}
+}</code></pre>
+        </div>
+    </d-article>
+
+    <footer>
+        This project page was adapted from the original template while preserving its layout language and replacing the
+        content with MedCTA paper material, figures, tables, and benchmark results.
+    </footer>
+</body>
+
+</html>
