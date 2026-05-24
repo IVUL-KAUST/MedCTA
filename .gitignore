@@ -1,0 +1,34 @@
+# cache / python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# outputs / logs
+ci_inference_output/
+logs/
+*.log
+
+# large or private data
+
+datasets/
+figs/
+outputs/
+
+# env / secrets
+.env
+*.key
+*.pem
+
+# editor
+.vscode/
+.idea/
+opencompass/outputs/
+opencompass/data/
+
+vlm_models/DeepSeek-VL2/
+vlm_models/LLaVA-Med/
+vlm_models/MCTA/
+vlm_models/med-flamingo/
+vlm_models/results/
+

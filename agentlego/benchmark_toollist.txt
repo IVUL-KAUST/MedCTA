@@ -1,0 +1,5 @@
+Calculator
+GoogleSearch
+OCR
+ImageDescription
+RegionAttributeDescription
