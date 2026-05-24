@@ -9,10 +9,26 @@
 </p>
 
 <p align="center">
-  <a href="https://ivul-kaust.github.io/MedCTA/"><img src="https://img.shields.io/badge/Project-Page-ffb6c1?style=for-the-badge&logo=githubpages&logoColor=white" /></a>
-  <a href="#-leaderboard"><img src="https://img.shields.io/badge/Leaderboard-MedCTA-9b5de5?style=for-the-badge&logo=mediamarkt&logoColor=white" /></a>
-  <a href="#-evaluate-on-medcta"><img src="https://img.shields.io/badge/Evaluation-OpenCompass-00bbf9?style=for-the-badge&logo=python&logoColor=white" /></a>
-  <a href="#-citation"><img src="https://img.shields.io/badge/Citation-BibTeX-f15bb5?style=for-the-badge&logo=readthedocs&logoColor=white" /></a>
+<p align="center">
+  <a href="https://ivul-kaust.github.io/MedCTA/">
+    <img src="https://img.shields.io/badge/Project-Page-ffb6c1?style=for-the-badge&logo=githubpages&logoColor=white" />
+  </a>
+
+  <a href="https://huggingface.co/datasets/IVUL-KAUST/MedCTA">
+    <img src="https://img.shields.io/badge/HuggingFace-Dataset-ffd166?style=for-the-badge&logo=huggingface&logoColor=black" />
+  </a>
+
+  <a href="#-leaderboard">
+    <img src="https://img.shields.io/badge/Leaderboard-MedCTA-9b5de5?style=for-the-badge&logo=mediamarkt&logoColor=white" />
+  </a>
+
+  <a href="#-evaluate-on-medcta">
+    <img src="https://img.shields.io/badge/Evaluation-OpenCompass-00bbf9?style=for-the-badge&logo=python&logoColor=white" />
+  </a>
+
+  <a href="#-citation">
+    <img src="https://img.shields.io/badge/Citation-BibTeX-f15bb5?style=for-the-badge&logo=readthedocs&logoColor=white" />
+  </a>
 </p>
 
 <p align="center">
