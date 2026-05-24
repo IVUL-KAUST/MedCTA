@@ -112,23 +112,6 @@ MedCTA is designed to reveal not only **whether** an agent gets the answer right
 
 </div>
 
-### 🩺 Modality Coverage
-
-MedCTA includes diverse medical contexts across imaging, reports, and visual clinical evidence.
-
-<div align="center">
-
-| Modality | Share |
-|---|---:|
-| CT | **20.0%** |
-| Reports | **20.0%** |
-| Histopathology | **18.3%** |
-| X-ray | **9.6%** |
-| MRI | **8.7%** |
-| Fundus | **7.0%** |
-
-</div>
-
 ---
 
 ## 🧩 Task Format
