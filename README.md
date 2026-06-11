@@ -10,6 +10,9 @@
 
 <p align="center">
 <p align="center">
+   <a href="https://arxiv.org/abs/2606.11702">
+    <img src="https://img.shields.io/badge/arXiv-2606.11702-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white" />
+  </a>
   <a href="https://ivul-kaust.github.io/MedCTA/">
     <img src="https://img.shields.io/badge/Project-Page-ffb6c1?style=for-the-badge&logo=githubpages&logoColor=white" />
   </a>
@@ -704,13 +707,15 @@ MedCTA/
 If you use MedCTA in your research, please cite the paper once the citation is available.
 
 ```bibtex
-@misc{medcta2026,
-  title        = {MedCTA: A Benchmark for Clinical Tool Agents},
-  author       = {MedCTA Team},
-  year         = {2026},
-  note         = {Benchmark for clinician-verified multimodal clinical tool agents},
-  url          = {https://ivul-kaust.github.io/MedCTA/}
-}
+@misc{medcta,
+      title={MedCTA: A Benchmark for Clinical Tool Agents}, 
+      author={Tajamul Ashraf and Hyewon Jeong and Fida Mohammad Thoker and Bernard Ghanem},
+      year={2026},
+      eprint={2606.11702},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.11702}, 
+
 ```
 
 ---
